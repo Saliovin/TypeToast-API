@@ -1,4 +1,5 @@
 from logging.config import fileConfig
+import os
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -16,6 +17,8 @@ config = context.config
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+config.set_main_option("sqlalchemy.url", os.getenv("SQLALCHEMY_DATABASE_URL"))
 
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -69,7 +72,16 @@ def run_migrations_online() -> None:
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
 
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            version_table_schema=target_metadata.schema,
+            include_schemas=True,
+        )
+
         with context.begin_transaction():
+            context.execute(f"create schema if not exists {target_metadata.schema};")
+            context.execute(f"set search_path to {target_metadata.schema}")
             context.run_migrations()
 
 
