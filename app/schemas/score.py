@@ -1,14 +1,15 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class ScoreBase(BaseModel):
     name: str
-    wpm: str
-    accuracy: str
-    correct: str
-    incorrect: str
-    extra: str
-    missed: str
+    wpm: int
+    accuracy: float
+    correct: int
+    incorrect: int
+    extra: int
+    missed: int
 
 
 class ScoreCreate(ScoreBase):
@@ -17,7 +18,7 @@ class ScoreCreate(ScoreBase):
 
 class Score(ScoreBase):
     id: int
-    datetime: int
+    datetime: datetime
 
     class Config:
         orm_mode = True
