@@ -21,4 +21,4 @@ class Score(Base):
     incorrect = Column(Integer)
     extra = Column(Integer)
     missed = Column(Integer)
-    datetime = Column(DateTime, default=datetime.now(), index=True)
+    datetime = Column(DateTime, default=datetime.now, index=True)
